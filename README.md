@@ -1,6 +1,6 @@
-# deloitte
+# digi_hack
 
-A new Flutter application.
+A new Flutter project.
 
 ## Getting Started
 
