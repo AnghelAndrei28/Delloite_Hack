@@ -66,17 +66,22 @@ class MainScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, MapScreen.routName, arguments: true);
-              },
-              child: Text('Found dogs'),
-            ),
-            RaisedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, MapScreen.routName, arguments: false);
-                },
-                child: Text('Lost dogs'),
+            Text("Tell us what you want to do"),
+            Row(
+              children: [
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, MapScreen.routName, arguments: true);
+                  },
+                  child: Text('Found dogs'),
+                ),
+                RaisedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, MapScreen.routName, arguments: false);
+                    },
+                    child: Text('Lost dogs'),
+                ),
+              ],
             )
           ],
         ),

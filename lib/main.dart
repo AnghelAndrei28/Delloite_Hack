@@ -1,6 +1,7 @@
 import 'package:digi_hack/CustomMark.dart';
 import 'package:digi_hack/MainScreen.dart';
 import 'package:digi_hack/MapScreen.dart';
+import 'package:digi_hack/Random.dart';
 import 'package:digi_hack/ReportScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget{
         ReportScreen.routName: (ctx) => ReportScreen(),
         MapScreen.routName: (ctx) => MapScreen(),
         MainScreen.routName: (ctx) => MainScreen(),
+        Random.routName: (ctx) => Random(),
       },
       home: const LoginPage(title: 'Login UI'),
     );

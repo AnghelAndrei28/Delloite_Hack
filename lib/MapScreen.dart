@@ -51,7 +51,7 @@ class _MapScreenState extends State<MapScreen> {
     if (extractedData != null) {
       print("A gasit date");
         print("Extracted =" + extractedData.toString());
-        extractedData.forEach((orderId, orderData){markers.add(CustomMark(orderId, MarkerId(orderId), orderData['userId'], orderData['type'], new LatLng(orderData['lat'], orderData['lon']), orderData['description']));
+        extractedData.forEach((orderId, orderData){markers.add(CustomMark(orderId, MarkerId(orderId), orderData['userId'], orderData['type'], new LatLng(orderData['lat'], orderData['lon']), orderData['description'], context));
         });
     }
 
@@ -64,10 +64,9 @@ class _MapScreenState extends State<MapScreen> {
     return  Scaffold(
         appBar: AppBar(
           actions: [
-            FloatingActionButton(onPressed: _setCurrentLocation)
+            IconButton(onPressed: _setCurrentLocation, icon: Icon(Icons.location_history),),
           ],
           title: Text("Multiple Markers in Google Map"),
-          backgroundColor: Colors.deepOrangeAccent,
         ),
         body:  FutureBuilder(
           future: _fetchData(),
@@ -110,7 +109,8 @@ class _MapScreenState extends State<MapScreen> {
           "userID",
           report,
           point,
-          "$result"
+          "$result",
+        context
       ));
     });
   }
@@ -118,10 +118,10 @@ class _MapScreenState extends State<MapScreen> {
   Set<Marker> getmarkers() { //markers to place on map
 
     if(report)
-    return [...markers].where((element) => !element.lost).toSet();
+    return [...markers].where((element) => element.lost).toSet();
 
     else {
-      return [...markers].where((element) => element.lost).toSet();
+      return [...markers].where((element) => !element.lost).toSet();
     }
   }
 }
