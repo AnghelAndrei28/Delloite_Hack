@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digi_hack/CustomMark.dart';
 import 'package:digi_hack/ReportScreen.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget{
   static const routName = "/map";
@@ -33,9 +36,26 @@ class _MapScreenState extends State<MapScreen> {
     sharedPreferences.setDouble('oldLongitude', initCoordinates.longitude);
   }
 
+
+
   _newEntry() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     currentLocation = new LatLng(sharedPreferences.getDouble('oldLatitude') ?? 0, sharedPreferences.getDouble('oldLongitude') ?? 0);
+  }
+
+  Future<http.Response> _fetchData() async{
+    final response = await http.get(Uri.parse(
+        "https://digi-hack-default-rtdb.firebaseio.com/reports.json?"));
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    print("A ajuns la adaugare");
+    if (extractedData != null) {
+      print("A gasit date");
+        print("Extracted =" + extractedData.toString());
+        extractedData.forEach((orderId, orderData){markers.add(CustomMark(orderId, MarkerId(orderId), orderData['userId'], orderData['type'], new LatLng(orderData['lat'], orderData['lon']), orderData['description']));
+        });
+    }
+
+    return response;
   }
 
   @override
@@ -50,20 +70,29 @@ class _MapScreenState extends State<MapScreen> {
           title: Text("Multiple Markers in Google Map"),
           backgroundColor: Colors.deepOrangeAccent,
         ),
-        body:  GoogleMap( //Map widget from google_maps_flutter package
-          zoomGesturesEnabled: true, //enable Zoom in, out on map
-          initialCameraPosition: CameraPosition( //innital position in map
-            target: currentLocation, //initial position
-            zoom: 15.0, //initial zoom level
-          ),
-          markers: getmarkers(), //markers to show on map
-          mapType: MapType.normal, //map type
-          onMapCreated: (controller) { //method called when map is created
-            setState(() {
-              mapController = controller;
-            });
-          },
-          onTap: _handleTap,
+        body:  FutureBuilder(
+          future: _fetchData(),
+          builder: (context, response) {
+            if(response.data == null) {
+
+              return const Center(child: CircularProgressIndicator());
+            }
+            return GoogleMap( //Map widget from google_maps_flutter package
+              zoomGesturesEnabled: true, //enable Zoom in, out on map
+              initialCameraPosition: CameraPosition( //innital position in map
+                target: currentLocation, //initial position
+                zoom: 15.0, //initial zoom level
+              ),
+              markers: getmarkers(), //markers to show on map
+              mapType: MapType.normal, //map type
+              onMapCreated: (controller) { //method called when map is created
+                setState(() {
+                  mapController = controller;
+                });
+              },
+              onTap: _handleTap,
+            );
+          }
         )
     );
   }
@@ -77,6 +106,7 @@ class _MapScreenState extends State<MapScreen> {
     var result = await  Navigator.pushNamed(context, ReportScreen.routName, arguments: point);
     setState(() {
       markers.add(CustomMark(
+        DateTime.now().toString(),
           MarkerId(point.toString()),
           "userID",
           report,
