@@ -1,5 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 
 import 'register_screen.dart';
 
@@ -14,6 +16,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   var rememberValue = false;
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    controller: emailController,
                   ),
                   const SizedBox(
                     height: 20,
@@ -71,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    controller: passwordController,
                   ),
                   CheckboxListTile(
                     title: const Text("Remember me"),
@@ -89,7 +96,44 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+                        var userSignin = {
+                          'email': '',
+                          'password': '',
+                        };
+                        userSignin['email'] = emailController.text;
+                        userSignin['password'] = passwordController.text;
+
+                        DatabaseReference database = FirebaseDatabase.instance.ref('Users');
+                        String keyUser = '';
+                        database.once().then((data) {
+                          Map<String, dynamic> mapData = data.snapshot.value as Map<String, dynamic>;
+                          try {
+                            mapData.forEach((key, value) {
+                              print (value['email']);
+                              if ((value['email'] == userSignin['email']) && (value['password'] == userSignin['password'])) {
+                                keyUser = key;
+                                throw '';
+                              }
+                            });
+                          } catch (e) {
+
+                          } finally {
+                            if (keyUser == '') {
+                              SnackBar (
+                                content: new Text ('Wrong email or password'),
+                                duration: new Duration (seconds: 5),
+                              );
+                            } else {
+                              Navigator.pushNamed (
+                                context,
+                                ExtractArgumentsScreen.routeName,
+                                arguments: keyUser,
+                              );
+                            }
+                          }
+                        });
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
@@ -114,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                              const RegisterPage(title: 'Register UI'),
+                              RegisterPage(),
                             ),
                           );
                         },
@@ -129,5 +173,15 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+}
+
+class ExtractArgumentsScreen extends StatelessWidget {
+  static const routeName = '/garbage';
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }

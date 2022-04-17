@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'login_screen.dart';
 
-void main() {
+void initializeFirebase () async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+}
+
+void main() async {
+  initializeFirebase();
   runApp(const MyApp());
 }
 
@@ -32,6 +43,7 @@ class MyApp extends StatelessWidget {
         colorScheme: defaultColorScheme,
         primarySwatch: Colors.blue,
       ),
+      routes: {ExtractArgumentsScreen.routeName: (ctx) => ExtractArgumentsScreen ()},
       home: const LoginPage(title: 'Login UI'),
     );
   }

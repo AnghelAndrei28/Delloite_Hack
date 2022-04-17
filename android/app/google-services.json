@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1085991503972",
+    "firebase_url": "https://digi-hack-default-rtdb.firebaseio.com",
+    "project_id": "digi-hack",
+    "storage_bucket": "digi-hack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085991503972:android:7bde4c055ddb5f52853771",
+        "android_client_info": {
+          "package_name": "com.example.digi_hack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085991503972-n7phmlgdju4mlk79ee7feb8ebc35huhs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADw9vuSSHRVR8_LABs3auSR_4TP6w3-ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085991503972-n7phmlgdju4mlk79ee7feb8ebc35huhs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

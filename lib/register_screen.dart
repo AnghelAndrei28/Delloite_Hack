@@ -1,19 +1,17 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'login_screen.dart';
+import 'UserClass.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<RegisterPage> createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
+class RegisterPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   var rememberValue = false;
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
+                          controller: firstNameController,
                         ),
                       ),
                       const SizedBox(
@@ -66,6 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
+                          controller: lastNameController,
                         ),
                       ),
                     ],
@@ -85,6 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    controller: emailController,
                   ),
                   const SizedBox(
                     height: 20,
@@ -105,13 +106,57 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    controller: passwordController,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+                        var userSignUp = {
+                          'first_name': '',
+                          'last_name': '',
+                          'email': '',
+                          'password': '',
+                        };
+                        userSignUp['first_name'] = firstNameController.text;
+                        userSignUp['last_name'] = lastNameController.text;
+                        userSignUp['email'] = emailController.text;
+                        userSignUp['password'] = passwordController.text;
+
+                        DatabaseReference database = FirebaseDatabase.instance.ref('Users');
+                        // database.once().then((data) {
+                        //   Map<String, dynamic> mapData = data.snapshot.value as Map<String, dynamic>;
+                        //   try {
+                        //     mapData.forEach((key, value2) {
+                        //       var email = value2['email'];
+                        //
+                        //       if (email == userSignUp['email']) {
+                        //         flag = 0;
+                        //         showDialog(
+                        //             context: context,
+                        //             builder: (BuildContext context) => _buildPopupDialog (context)
+                        //         );
+                        //         throw '';
+                        //       }
+                        //     });
+                        //   } catch (e) {
+                        //
+                        //   }
+                        // });
+
+                        var userTemplate = database.push();
+                        userTemplate.set(userSignUp);
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                            const LoginPage(title: 'Login UI'),
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
@@ -152,4 +197,26 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+}
+
+Widget _buildPopupDialog (BuildContext context) {
+  return new AlertDialog (
+    title: const Text('Could not create new account'),
+    content: new Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text("Email address already exists"),
+      ],
+    ),
+    actions: <Widget>[
+      new FlatButton(
+        onPressed: () {
+          Navigator.of (context).pop ();
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: const Text('Back'),
+      ),
+    ],
+  );
 }
