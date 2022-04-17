@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ReportScreen extends StatefulWidget {
-  static const routName = "/tracks";
+  static const routName = "/report";
 
   @override
   _ReportScreenState createState() => _ReportScreenState();
