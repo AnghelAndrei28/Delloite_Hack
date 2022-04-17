@@ -61,7 +61,6 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     report = ModalRoute.of(context)!.settings.arguments as bool;
-    _newEntry();
     return  Scaffold(
         appBar: AppBar(
           actions: [
@@ -119,10 +118,10 @@ class _MapScreenState extends State<MapScreen> {
   Set<Marker> getmarkers() { //markers to place on map
 
     if(report)
-    return [...markers].where((element) => !element.type).toSet();
+    return [...markers].where((element) => !element.lost).toSet();
 
     else {
-      return [...markers].where((element) => element.type).toSet();
+      return [...markers].where((element) => element.lost).toSet();
     }
   }
 }

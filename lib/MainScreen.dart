@@ -70,13 +70,13 @@ class MainScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, MapScreen.routName, arguments: true);
               },
-              child: Text('Report lost dog'),
+              child: Text('Found dogs'),
             ),
             RaisedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, MapScreen.routName, arguments: false);
                 },
-                child: Text('Report found dog'),
+                child: Text('Lost dogs'),
             )
           ],
         ),

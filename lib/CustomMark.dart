@@ -6,9 +6,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class CustomMark extends Marker{
   late String id;
   late String userId;
-  late bool type;
+  late bool lost;
   CustomMark(String id, MarkerId markerId, String userId, bool type, LatLng point, String description) : super(markerId: markerId, position: point, infoWindow: InfoWindow(title: description)) {
-    this.type = type;
+    this.lost = type;
     this.userId = userId;
   }
 }
