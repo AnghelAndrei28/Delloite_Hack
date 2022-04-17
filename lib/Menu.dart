@@ -1,19 +1,5 @@
 import 'package:flutter/material.dart';
 
-//to be removed
-class GarbageRt1 extends StatelessWidget {
-  const GarbageRt1({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-          child: Text('da')
-      ),
-    );
-  }
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 

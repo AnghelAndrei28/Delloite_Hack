@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import 'DetailsFoundAnimal.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -111,20 +113,6 @@ Future<Details> getDetails(String reportId) async {
   return Details(ret_description, ret_phone, ret_name);
 }
 
-//to be removed
-class GarbageRt1 extends StatelessWidget {
-  const GarbageRt1({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-          child: Text('da')
-      ),
-    );
-  }
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -213,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                      MaterialPageRoute(builder: (context) =>  GarbageRt1()),
                     );
                   },
                 ),
@@ -223,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                      MaterialPageRoute(builder: (context) =>  GarbageRt1()),
                     );
                   },
                 ),
@@ -274,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                  MaterialPageRoute(builder: (context) =>  GarbageRt1()),
                 );
               },
               child: Text('I lost my doggie:('),
@@ -283,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                    MaterialPageRoute(builder: (context) =>  GarbageRt1()),
                   );
                 },
                 child: Text('I found a lost doggie')

@@ -9,13 +9,15 @@ void main() {
 }
 
 class Report {
-  final LatLng coordinates;
+  final double latitude;
+  final double longitude;
   final String description;
   final bool type;
   final String userId;
 
   const Report({
-    required this.coordinates,
+    required this.latitude,
+    required this.longitude,
     required this.description,
     required this.type,
     required this.userId,
@@ -23,7 +25,8 @@ class Report {
 
   factory Report.fromJson(Map<String, dynamic> json) {
     return Report(
-        coordinates: json['coordinates'],
+        latitude: json['lat'],
+        longitude: json['lon'],
         description: json['description'],
         type: json['type'],
         userId: json['userId']
@@ -62,64 +65,94 @@ class Details {
   String phone = "";
   String name = "";
 
-  Details(description, phone, name) {
-    this.description = description;
-    this.phone = phone;
-    this.name = name;
-  }
+  // Details(description, phone, name) {
+  //   this.description = description;
+  //   this.phone = phone;
+  //   this.name = name;
+  // }
 }
 
-Future<Details> getDetails(String reportId) async {
-  http.Response response = await http.get(Uri.parse(
-      'https://digi-hack-default-rtdb.firebaseio.com/reports.json'));
-  String ret_description = "";
-  String ret_phone = "";
-  String ret_name = "";
-  Map extractedData = json.decode(response.body) as Map<String, dynamic>;
-  String userId = "";
-  Report report;
-  extractedData.forEach((r_id, r_data) {
-    report = (Report(
-      coordinates: r_data['coordinates'],
-      description: r_data['description'],
-      type: r_data['type'],
-      userId: r_data['userId'],
-    ));
-    if(r_id == reportId) {
-      userId = report.userId;
-      ret_description = report.description;
-    }
-  });
 
-  response = await http.get(Uri.parse(
-      'https://digi-hack-default-rtdb.firebaseio.com/reports.json'));
-  extractedData = json.decode(response.body) as Map<String, dynamic>;
-  User user;
-  extractedData.forEach((u_id, u_data) {
-    user = (User(
-      email: u_data['email'],
-      first_name: u_data['first_name'],
-      last_name: u_data['last_name'],
-      password: u_data['password'],
-      phone: u_data['phone'],
-    ));
-    if(u_id == userId) {
-      ret_phone = user.phone;
-      ret_name = user.last_name + " " + user.first_name;
-    }
-  });
-  return Details(ret_description, ret_phone, ret_name);
-}
 
 //to be removed
 class GarbageRt1 extends StatelessWidget {
-  const GarbageRt1({Key? key}) : super(key: key);
+
+  late Details details = new Details();
+
+  Future<void> getDetails(String reportId) async {
+    final response = await http.get(Uri.parse(
+        'https://digi-hack-default-rtdb.firebaseio.com/reports.json?'));
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    print(extractedData);
+    String userId = "";
+    Report report;
+    extractedData.forEach((r_id, r_data) {
+      report = (Report(
+        latitude: r_data['lat'],
+        longitude: r_data['lon'],
+        description: r_data['description'],
+        type: r_data['type'],
+        userId: r_data['userId'],
+      ));
+
+      if(r_id == reportId) {
+        userId = report.userId;
+        details.description = report.description;
+      }
+    });
+
+    final response2 = await http.get(Uri.parse(
+        'https://digi-hack-default-rtdb.firebaseio.com/Users.json?'));
+    final extractedData2 = json.decode(response2.body) as Map<String, dynamic>;
+    print(extractedData2);
+    User user;
+    extractedData2.forEach((u_id, u_data) {
+      user = (User(
+        email: u_data['email'],
+        first_name: u_data['first_name'],
+        last_name: u_data['last_name'],
+        password: u_data['password'],
+        phone: u_data['phone'],
+      ));
+      if(u_id == userId) {
+        details.phone = user.phone;
+        details.name = user.last_name + " " + user.first_name;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.deepOrange,
+      appBar: AppBar(
+        title: Text("Details"),
+      ),
       body: Center(
-          child: Text('da')
+          child: FutureBuilder(
+              future: getDetails('ADSGHAS'),
+              builder: (ctx, AsyncSnapshot<dynamic> response) {
+                return Container(
+                  margin: EdgeInsets.all(15),
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Dog Found"),
+                    SizedBox(height: 20),
+                    Image.asset("assets/caine.png"),
+                    SizedBox(height: 20,),
+                    Text(details.description),
+                    SizedBox(height: 20,),
+                    Text("Contact"),
+                    SizedBox(height: 5,),
+                    Text("Name : " + details.name),
+                    SizedBox(height: 5,),
+                    Text("Phone : " + details.phone),
+                  ],
+                ),);
+              })
       ),
     );
   }
@@ -179,7 +212,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
-      print(getDetails('dgbdgdgtdg'));
     });
   }
 
@@ -213,7 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                      MaterialPageRoute(builder: (context) => GarbageRt1()),
                     );
                   },
                 ),
@@ -223,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                      MaterialPageRoute(builder: (context) => GarbageRt1()),
                     );
                   },
                 ),
@@ -274,7 +306,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                  MaterialPageRoute(builder: (context) =>  GarbageRt1()),
                 );
               },
               child: Text('I lost my doggie:('),
@@ -283,7 +315,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const GarbageRt1()),
+                    MaterialPageRoute(builder: (context) => GarbageRt1()),
                   );
                 },
                 child: Text('I found a lost doggie')
