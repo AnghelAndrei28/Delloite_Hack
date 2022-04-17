@@ -39,6 +39,8 @@ dependencies:
   geolocator: ^8.2.0
   geocoding: ^2.0.4
   shared_preferences: ^2.0.13
+  firebase_database: ^9.0.11
+  email_validator: ^2.0.1
 
 dev_dependencies:
   flutter_test:

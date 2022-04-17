@@ -6,6 +6,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context)!.settings.arguments as String;
+    print(user);
     return Scaffold(
       drawer: Drawer(
           child: ListView(
