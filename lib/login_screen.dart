@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:digi_hack/MainScreen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'register_screen.dart';
 

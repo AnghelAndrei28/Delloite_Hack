@@ -1,6 +1,8 @@
+import 'package:digi_hack/MainScreen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'login_screen.dart';
 import 'UserClass.dart';
@@ -126,36 +128,25 @@ class RegisterPage extends StatelessWidget {
                         userSignUp['password'] = passwordController.text;
 
                         DatabaseReference database = FirebaseDatabase.instance.ref('Users');
-                        // database.once().then((data) {
-                        //   Map<String, dynamic> mapData = data.snapshot.value as Map<String, dynamic>;
-                        //   try {
-                        //     mapData.forEach((key, value2) {
-                        //       var email = value2['email'];
-                        //
-                        //       if (email == userSignUp['email']) {
-                        //         flag = 0;
-                        //         showDialog(
-                        //             context: context,
-                        //             builder: (BuildContext context) => _buildPopupDialog (context)
-                        //         );
-                        //         throw '';
-                        //       }
-                        //     });
-                        //   } catch (e) {
-                        //
-                        //   }
-                        // });
 
                         var userTemplate = database.push();
                         userTemplate.set(userSignUp);
 
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                            const LoginPage(title: 'Login UI'),
-                          ),
-                        );
+                        if (kIsWeb) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                              const LoginPage(title: 'Login UI'),
+                            ),
+                          );
+                        } else {
+                          Navigator.pushNamed (
+                            context,
+                            MainScreen.routName,
+                            arguments: userTemplate.key,
+                          );
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
